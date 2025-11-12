@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import './App.css'
+import Home from './pages/Home/home.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div>
-      <p>Place holder for the app</p>
+      <Home />
     </div>
   )
 }

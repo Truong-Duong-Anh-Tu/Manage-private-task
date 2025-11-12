@@ -1,10 +1,17 @@
 import React from 'react'
+import './style.css'
 
 function Home() {
 
     return (
-        <div>
-            <h1>Manager tasks page</h1>
+        <div className='homepage'>
+            <div className='taskbar'>
+
+            </div>
+
+            <div className='content'>
+
+            </div>
         </div>
     )
 }
