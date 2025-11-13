@@ -52,7 +52,7 @@
     background-color: #ffffff;
 }
 
-.selections a:active {
+.selections a.active {
     color: #000000;
     background-color: #ffffff;
 }

@@ -8,9 +8,9 @@ function Taskbar() {
         <div className='taskbar'>
             <img src={Logo} alt='logo' className='logo' />
             <nav className='selections'>
-                <NavLink to='/' end>Tổng quan</NavLink>
-                <NavLink to='/tasks'>Danh sách nhiệm vụ</NavLink>
-                <NavLink to='/tasks'>Cài đặt</NavLink>
+                <NavLink to='/' className={({ isActive }) => isActive ? 'active' : ''}>Tổng quan</NavLink>
+                <NavLink to='/tasks' className={({ isActive }) => isActive ? 'active' : ''}>Danh sách nhiệm vụ</NavLink>
+                <NavLink to='/setting' className={({ isActive }) => isActive ? 'active' : ''}>Cài đặt</NavLink>
             </nav>
         </div>
     )

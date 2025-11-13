@@ -1,0 +1,16 @@
+.settingpage {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    position: relative;
+    box-shadow: 0 0px 12px 10px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    color: #707070;
+}
+
+.section-setting {
+    width: 100%;
+    height: 100%
+}

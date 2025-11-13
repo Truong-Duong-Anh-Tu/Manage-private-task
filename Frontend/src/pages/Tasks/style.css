@@ -1,0 +1,261 @@
+.taskspage {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    position: relative;
+    box-shadow: 0 0px 12px 10px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    color: #707070;
+}
+
+.section-tasks {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-container {
+    margin-top: 20px;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-tasks {
+    width: 60%;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    margin-right: 10px;
+}
+
+.status-filter-wrapper-and-create {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.status-filter {
+    width: 120px;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    color: #333;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.create-new-task {
+    width: 20%;
+    color: #FFFFFF;
+    background-color: #000000;
+    border-radius: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal {
+    width: 420px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #999;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.modal-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: #555;
+}
+
+.modal-form input,
+.modal-form select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d1d1;
+    background-color: #fafafa;
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+    outline: none;
+    border-color: #000000;
+    background-color: #fff;
+}
+
+.modal-actions {
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-cancel,
+.modal-submit {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.modal-cancel {
+    background-color: #f0f0f0;
+    color: #444;
+}
+
+.modal-submit {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.modal-cancel:hover,
+.modal-submit:hover {
+    filter: brightness(1.05);
+}
+
+.search-btn {
+    width: 20%;
+    color: #FFFFFF;
+    background-color: #000000;
+    border-radius: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.container-list-tasks {
+    margin: 20px;
+    flex: 1;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+
+.table-list-task {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+}
+
+.table-list-task thead tr {
+    background: transparent;
+}
+
+.thStyle {
+    border: 1px solid #000000;
+    padding: 8px;
+    background-color: #000000;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.thActions {
+    text-align: center;
+}
+
+.table-list-task tbody tr {
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+}
+
+.table-list-task tbody tr td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.table-list-task tbody tr td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+
+.trStyle {
+    border: 1px solid #ccc;
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 8px;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.action-btn {
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.edit-btn {
+    background-color: #000001;
+    color: #ffffff;
+}
+
+.delete-btn {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(90, 90, 90, 0.12);
+}
