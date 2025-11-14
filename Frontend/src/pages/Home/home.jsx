@@ -2,8 +2,8 @@ import React from 'react'
 import './style.css'
 import Taskbar from '../../components/Taskbar/taskbar'
 import Content from '../../components/Content/content'
-import Chart from '../../components/Others/chart'
-import Calendar from '../../components/Others/calendar'
+import Chart from '../../components/Others/Chart/chart'
+import Calendar from '../../components/Others/Calendar/calendar'
 
 
 function Home() {

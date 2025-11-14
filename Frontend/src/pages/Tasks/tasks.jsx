@@ -17,6 +17,8 @@ function Tasks() {
         status: 'Chưa làm',
     })
 
+    const [editTask, setEditTask] = useState(null)
+
     const data = [
         { id: 1, name: 'mission a', due: '9/9/2026', completeddate: '9/9/2025', status: 'Đã hoàn thành' },
         { id: 2, name: 'mission b', due: '10/12/2025', completeddate: '', status: 'Đang làm' },
@@ -41,10 +43,31 @@ function Tasks() {
         resetModal()
     }
 
+    const handleEditTask = (task) => {
+        setNewTask({
+            name: task.name,
+            due: task.due,
+            completeddate: task.completeddate,
+            status: task.status,
+        })
+        setEditTask(task.id)
+        setIsModalOpen(true)
+    }
+
     const handleModalSubmit = (e) => {
         e.preventDefault()
-        console.log('New task submitted:', newTask)
+        if (editTask) {
+            console.log('Cập nhật thành công')
+        }
+        else {
+            console.log('New task submitted:', newTask)
+        }
         handleCloseModal()
+    }
+
+    const handleDeleteTask = (id) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa task này không ?'))
+            console.log('Đã xóa task:', id)
     }
 
 
@@ -93,8 +116,8 @@ function Tasks() {
                                         <td className='tdStyle'>{row.status}</td>
                                         <td className='tdStyle'>
                                             <div className='action-buttons'>
-                                                <button className='action-btn edit-btn'>✎</button>
-                                                <button className='action-btn delete-btn'>✖</button>
+                                                <button className='action-btn edit-btn' onClick={() => handleEditTask(row)}>✎</button>
+                                                <button className='action-btn delete-btn' onClick={() => handleDeleteTask(row.id)}>✖</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -132,7 +155,7 @@ function Tasks() {
                                         Ngày hoàn thành
                                         <input
                                             type='date'
-                                            value={newTask.completeddate}
+                                            value={new Date(newTask.completeddate)}
                                             onChange={(e) => setNewTask({ ...newTask, completeddate: e.target.value })}
                                         />
                                     </label>

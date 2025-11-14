@@ -1,6 +1,7 @@
 import { React, useState } from 'react'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
+import './style.css'
 
 function Taskcalendar() {
     const [date, setDate] = useState(new Date());
@@ -11,10 +12,8 @@ function Taskcalendar() {
                 style={{
                     width: '100%',
                     height: '100%',
-                    color: '#000000',
                     fontSize: '10px',
                     textAlign: 'center',
-                    backgroundColor: 'black',
                 }}
             >
                 <Calendar
