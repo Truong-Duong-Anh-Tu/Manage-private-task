@@ -33,6 +33,7 @@ public class MissionService : IMissionService
         {
             Name = input.Name.Trim(),
             Due = input.Due,
+            Status = "Chưa hoàn thành"
         };
         await _repo.AddAsync(entity);
         await _repo.SaveChangesAsync();

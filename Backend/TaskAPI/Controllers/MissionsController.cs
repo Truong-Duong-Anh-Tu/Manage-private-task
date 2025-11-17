@@ -26,13 +26,16 @@ public class MissionsController : ControllerBase
             var dto = await _service.CreateAsync(input);
             return CreatedAtAction(nameof(GetOne), new
             {
-                id =
-           dto.Id
+                id = dto.Id
             }, dto);
         }
         catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return BadRequest(new 
+            { 
+                message = ex.Message,
+                inner = ex.InnerException?.Message
+            });
         }
     }
     [HttpPut("{id:int}")]
