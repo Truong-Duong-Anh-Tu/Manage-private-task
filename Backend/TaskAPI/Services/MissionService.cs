@@ -23,8 +23,7 @@ public class MissionService : IMissionService
     {
         if (string.IsNullOrWhiteSpace(input.Name))
             throw new ArgumentException("Name is required");
-        // if (input.Due == Datenull)
-        //     throw new ArgumentException("Age must be > 0");
+
         if (await _repo.ExistsByNameAsync(input.Name.Trim()))
             throw new InvalidOperationException("Mission already exists");
 
@@ -33,7 +32,7 @@ public class MissionService : IMissionService
         {
             Name = input.Name.Trim(),
             Due = input.Due,
-            Status = "Chưa hoàn thành"
+            Status = "Chưa làm"
         };
         await _repo.AddAsync(entity);
         await _repo.SaveChangesAsync();
@@ -59,6 +58,5 @@ public class MissionService : IMissionService
         await _repo.SaveChangesAsync();
         return true;
     }
-    private static MissionDto ToDto(Mission s) =>
-    new MissionDto(s.Id, s.Name, s.Due, s.Summit, s.Status);
+    private static MissionDto ToDto(Mission s) => new MissionDto(s.Id, s.Name, s.Due, s.Summit, s.Status);
 }

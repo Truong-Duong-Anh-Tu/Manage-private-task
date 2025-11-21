@@ -12,6 +12,22 @@ var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
+
+// Đặt tên cho chính sách CORS của bạn
+var MyAllowSpecificOrigins = "AllowAll";
+
+//Thêm dịch vụ CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 // Controller + Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,8 +41,7 @@ var app = builder.Build();
 // Tạo DB nếu chưa có
 using (var scope = app.Services.CreateScope())
 {
-    var db =
-   scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 }
 if (app.Environment.IsDevelopment())
@@ -34,7 +49,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
+
+app.UseRouting();
+app.UseCors(MyAllowSpecificOrigins);
+app.UseAuthentication();
+app.UseAuthorization();
+
+//app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
 

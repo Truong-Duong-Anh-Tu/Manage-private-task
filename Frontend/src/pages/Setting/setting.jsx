@@ -17,3 +17,19 @@ function Setting() {
 }
 
 export default Setting
+
+// interface FromDataEmployee {
+//     fullName: string;
+//     phone: string;
+//     email: string;
+//     citizenId: string; // Căn cước công dân
+//     taxCode: string; // Mã số thuế
+//     address: string;
+//     gender: string;
+//     bankAccount: {
+//         accountNumber: string;
+//         bankName: string;
+//         accountHolder: string;
+//     };
+//     avatar: string;
+// }

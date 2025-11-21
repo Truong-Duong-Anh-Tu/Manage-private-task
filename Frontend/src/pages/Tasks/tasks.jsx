@@ -1,37 +1,51 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import './style.css'
 import Taskbar from '../../components/Taskbar/taskbar'
 import Content from '../../components/Content/content'
+import { getTasks, createTask, updateTask, deleteTask } from '../../../api/task'
 
 
 function Tasks() {
 
+    const [tasks, setTasks] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [appliedQuery, setAppliedQuery] = useState('')
     const [statusFilter, setStatusFilter] = useState('all')
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [loading, setLoading] = useState(true); // Trạng thái loading
+    const [editTask, setEditTask] = useState(null)
     const [newTask, setNewTask] = useState({
         name: '',
         due: '',
-        completeddate: '',
+        summit: '',
         status: 'Chưa làm',
     })
 
-    const [editTask, setEditTask] = useState(null)
+    const normalizeApiData = (data) => {
+        if (Array.isArray(data)) return data
+        if (Array.isArray(data?.$values)) return data.$values
+        if (Array.isArray(data?.value)) return data.value
+        if (Array.isArray(data?.data)) return data.data
+        return []
+    }
 
-    const data = [
-        { id: 1, name: 'mission a', due: '9/9/2026', completeddate: '9/9/2025', status: 'Đã hoàn thành' },
-        { id: 2, name: 'mission b', due: '10/12/2025', completeddate: '', status: 'Đang làm' },
-        { id: 3, name: 'mission c', due: '7/7/2050', completeddate: '', status: 'Chưa làm' },
-    ];
+    const load = async () => {
+        setLoading(true);
+        const data = await getTasks();
+        setTasks(normalizeApiData(data));
+        setLoading(false);
+    };
+
+    console.log(tasks)
 
     const resetModal = () => {
         setNewTask({
             name: '',
             due: '',
-            completeddate: '',
+            summit: '',
             status: 'Chưa làm',
         })
+        setEditTask(null)
     }
 
     const handleCreateClick = () => {
@@ -44,38 +58,94 @@ function Tasks() {
     }
 
     const handleEditTask = (task) => {
+        const normalized = {
+            id: task?.id ?? task?.Id ?? null,
+            name: task?.name ?? task?.Name ?? '',
+            due: task?.due ?? task?.Due ?? '',
+            summit: task?.summit ?? task?.Summit ?? '',
+            status: task?.status ?? task?.Status ?? 'Chưa làm',
+        }
         setNewTask({
-            name: task.name,
-            due: task.due,
-            completeddate: task.completeddate,
-            status: task.status,
+            name: normalized.name,
+            due: normalized.due,
+            summit: normalized.summit,
+            status: normalized.status,
         })
-        setEditTask(task.id)
+        setEditTask(normalized.id)
         setIsModalOpen(true)
     }
 
-    const handleModalSubmit = (e) => {
+    const handleModalSubmit = async (e) => {
         e.preventDefault()
-        if (editTask) {
-            console.log('Cập nhật thành công')
+
+        const payload = {
+            Name: newTask.name.trim(),
+            Due: newTask.due,
+            summit: newTask.summit,
+            Status: newTask.status,
         }
-        else {
-            console.log('New task submitted:', newTask)
+
+
+
+        try {
+            if (editTask) {
+                console.log(`Đang cập nhật nhiệm vụ ID: ${editTask}`);
+
+                const originalTask = tasks.find(t => (t?.id ?? t?.Id) === editTask);
+                const updatePayload = {
+                    ...originalTask,
+                    ...payload,
+                };
+
+                await updateTask(editTask, updatePayload);
+                console.log('Cập nhật thành công');
+            }
+            else {
+                console.log('Đang tạo mới nhiệm vụ');
+                await createTask(payload);
+                console.log('Tạo mới thành công');
+            }
+
+            await load();
+        } catch (error) {
+            console.error('Lỗi khi thực hiện API:', error);
         }
         handleCloseModal()
     }
 
-    const handleDeleteTask = (id) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa task này không ?'))
-            console.log('Đã xóa task:', id)
+    const handleDeleteTask = async (id) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa task này không ?')) {
+            try {
+                await deleteTask(id);
+                console.log(`Đã xóa nhiệm vụ ID: ${id}`);
+                await load();
+            } catch (error) {
+                console.error('Lỗi khi xóa nhiệm vụ:', error);
+                alert('Không thể xóa nhiệm vụ. Vui lòng kiểm tra console.');
+            }
+        }
     }
 
 
-    const filteredData = data.filter((row) => {
-        const matchesName = row.name.toLowerCase().includes(appliedQuery.toLowerCase())
-        const matchesStatus = statusFilter === 'all' || row.status === statusFilter
+    const normalizedQuery = (appliedQuery ?? '').toString().toLowerCase()
+    const filteredData = tasks.filter((row) => {
+        const name = (row?.name ?? row?.Name ?? '')
+        const status = row?.status ?? row?.Status ?? ''
+        const nameText = name == null ? '' : name.toString().toLowerCase()
+        const statusText = status == null ? '' : status.toString()
+        const matchesName = nameText.includes(normalizedQuery)
+        const matchesStatus = statusFilter === 'all' || statusText === statusFilter
         return matchesName && matchesStatus
     })
+
+    const formatDate = (value) => {
+        if (!value || value === "0001-01-01" || value.startsWith("0001-01-01")) {
+            return "";
+        }
+        return value;
+    };
+
+    useEffect(() => { load(); }, []);
 
     return (
         <div className='taskspage'>
@@ -100,7 +170,7 @@ function Tasks() {
                         <table className='table-list-task'>
                             <thead>
                                 <tr>
-                                    <th className='thStyle'>Tên nhiêm vụ</th>
+                                    <th className='thStyle'>Tên nhiệm vụ</th>
                                     <th className='thStyle'>Ngày tới hạn</th>
                                     <th className='thStyle'>Ngày hoàn thành</th>
                                     <th className='thStyle'>Trạng thái</th>
@@ -108,20 +178,35 @@ function Tasks() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredData.map((row) => (
-                                    <tr key={row.id}>
-                                        <td className='tdStyle'>{row.name}</td>
-                                        <td className='tdStyle'>{row.due}</td>
-                                        <td className='tdStyle'>{row.completeddate || '-'}</td>
-                                        <td className='tdStyle'>{row.status}</td>
-                                        <td className='tdStyle'>
-                                            <div className='action-buttons'>
-                                                <button className='action-btn edit-btn' onClick={() => handleEditTask(row)}>✎</button>
-                                                <button className='action-btn delete-btn' onClick={() => handleDeleteTask(row.id)}>✖</button>
-                                            </div>
+                                {filteredData.length === 0 ? (
+                                    <tr>
+                                        <td className='tdStyle no-data' colSpan={5}>
+                                            Không có nhiệm vụ nào phù hợp
                                         </td>
                                     </tr>
-                                ))}
+                                ) : (
+                                    filteredData.map((row) => {
+                                        const id = row?.id ?? row?.Id
+                                        const name = row?.name ?? row?.Name ?? ''
+                                        const due = formatDate(row?.due ?? row?.Due)
+                                        const summit = formatDate(row?.summit ?? row?.Summit)
+                                        const status = row?.status ?? row?.Status ?? ''
+                                        return (
+                                            <tr key={id}>
+                                                <td className='tdStyle'>{name || '-'}</td>
+                                                <td className='tdStyle'>{due || '-'}</td>
+                                                <td className='tdStyle'>{summit || '-'}</td>
+                                                <td className='tdStyle'>{status || '-'}</td>
+                                                <td className='tdStyle'>
+                                                    <div className='action-buttons'>
+                                                        <button className='action-btn edit-btn' onClick={() => handleEditTask(row)}>✎</button>
+                                                        <button className='action-btn delete-btn' onClick={() => handleDeleteTask(id)}>✖</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -155,8 +240,8 @@ function Tasks() {
                                         Ngày hoàn thành
                                         <input
                                             type='date'
-                                            value={new Date(newTask.completeddate)}
-                                            onChange={(e) => setNewTask({ ...newTask, completeddate: e.target.value })}
+                                            value={newTask.summit}
+                                            onChange={(e) => setNewTask({ ...newTask, summit: e.target.value })}
                                         />
                                     </label>
                                     <label>
